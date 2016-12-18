@@ -6,27 +6,43 @@
 
 import React, { Component } from 'react';
 import {
+  Alert,
   AppRegistry,
+  Button,
   StyleSheet,
   Text,
   View
 } from 'react-native';
 
 export default class AudioRecorder extends Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      isRecording: false,
+    }
+  }
+
+  buttonTitle() {
+    return (this.state.isRecording) ? 'Stop Recording' : 'Start Recording'
+  }
+
+  onPress () {
+
+    this.setState({
+      isRecording: !this.state.isRecording
+    });
+
+  }
+
   render() {
+
     return (
       <View style={styles.container}>
-        <Text style={styles.welcome}>
-          Welcome to React Native!
-					I guess.
-        </Text>
-        <Text style={styles.instructions}>
-          To get started, edit index.ios.js
-        </Text>
-        <Text style={styles.instructions}>
-          Press Cmd+R to reload,{'\n'}
-          Cmd+D or shake for dev menu
-        </Text>
+        <Button
+          onPress={this.onPress.bind(this)}
+          title={this.buttonTitle.bind(this)()}
+        />
       </View>
     );
   }
