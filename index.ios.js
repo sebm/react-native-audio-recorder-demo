@@ -1,8 +1,4 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- * @flow
- */
+import {AudioRecorder as RNAudioRecorder, AudioUtils as RNAudioUtils} from 'react-native-audio';
 
 import React, { Component } from 'react';
 import {
@@ -20,7 +16,38 @@ export default class AudioRecorder extends Component {
     super(props);
     this.state = {
       isRecording: false,
+      currentTime: 0.0,
+      stoppedRecording: false,
+      stoppedPlaying: false,
+      playing: false,
+      finished: false
     }
+  }
+
+  componentDidMount() {
+    let audioPath = RNAudioUtils.DocumentDirectoryPath + '/test.aac';
+
+    this.prepareRecordingPath(audioPath);
+
+    RNAudioRecorder.onProgress = (data) => {
+      this.setState({ currentTime: Math.floor(data.currentTime) });
+    };
+
+    RNAudioRecorder.onFinished = (data) => {
+      this.setState({ finished: data.finished });
+      console.log(`Finished recording: ${data.finished}`);
+    };
+  }
+
+
+  prepareRecordingPath(audioPath) {
+    RNAudioRecorder.prepareRecordingAtPath(audioPath, {
+      SampleRate: 22050,
+      Channels: 1,
+      AudioQuality: "Low",
+      AudioEncoding: "aac",
+      AudioEncodingBitRate: 32000
+    });
   }
 
   buttonTitle() {
