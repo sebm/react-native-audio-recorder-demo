@@ -50,25 +50,23 @@ export default class AudioRecorder extends Component {
     });
   }
 
-  buttonTitle() {
+  buttonTitle = () => {
     return (this.state.isRecording) ? 'Stop Recording' : 'Start Recording'
-  }
+  };
 
-  onPress () {
-
+  onPress = () => {
     this.setState({
       isRecording: !this.state.isRecording
     });
-
-  }
+  };
 
   render() {
 
     return (
       <View style={styles.container}>
         <Button
-          onPress={this.onPress.bind(this)}
-          title={this.buttonTitle.bind(this)()}
+          onPress={this.onPress}
+          title={this.buttonTitle()}
         />
       </View>
     );
