@@ -1,4 +1,4 @@
-import {AudioRecorder as RNAudioRecorder, AudioUtils as RNAudioUtils} from 'react-native-audio';
+import { AudioRecorder as RNAudioRecorder, AudioUtils as RNAudioUtils } from 'react-native-audio';
 
 import * as Sound from 'react-native-sound';
 
@@ -9,7 +9,7 @@ import {
   Button,
   StyleSheet,
   Text,
-  View
+  View,
 } from 'react-native';
 
 export default class AudioRecorder extends Component {
@@ -23,7 +23,7 @@ export default class AudioRecorder extends Component {
       stoppedPlaying: false,
       playing: false,
       finished: false,
-      audioPath: RNAudioUtils.DocumentDirectoryPath + '/test.aac'
+      audioPath: `${RNAudioUtils.DocumentDirectoryPath}/test.aac`
     }
   }
 
@@ -90,7 +90,7 @@ export default class AudioRecorder extends Component {
       RNAudioRecorder.stopRecording();
       this.setState({stoppedRecording: true, isRecording: false});
     }
-  }
+  };
 
   _onPressRecord = () => {
     if (!this.state.isRecording) {

@@ -7,10 +7,10 @@
         "react"
     ],
     "extends": [
-        "eslint:recommended",
+        "airbnb",
         "plugin:react/recommended"
     ],
     "rules": {
-        // overrides
+        "react/jsx-filename-extension": 0
     }
 }
