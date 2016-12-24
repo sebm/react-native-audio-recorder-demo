@@ -12,6 +12,15 @@ import {
   View,
 } from 'react-native';
 
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#F5FCFF',
+  },
+});
+
 export default class AudioRecorder extends Component {
 
   constructor(props) {
@@ -23,12 +32,11 @@ export default class AudioRecorder extends Component {
       stoppedPlaying: false,
       playing: false,
       finished: false,
-      audioPath: `${RNAudioUtils.DocumentDirectoryPath}/test.aac`
-    }
+      audioPath: `${RNAudioUtils.DocumentDirectoryPath}/test.aac`,
+    };
   }
 
   componentDidMount() {
-
     this.prepareRecordingPath(this.state.audioPath);
 
     RNAudioRecorder.onProgress = (data) => {
@@ -37,28 +45,28 @@ export default class AudioRecorder extends Component {
 
     RNAudioRecorder.onFinished = (data) => {
       this.setState({ finished: data.finished });
-      Alert.alert(`Finished recording: ${data.finished}`)
+      Alert.alert(`Finished recording: ${data.finished}`);
     };
   }
-
 
   prepareRecordingPath(audioPath) {
     RNAudioRecorder.prepareRecordingAtPath(audioPath, {
       SampleRate: 22050,
       Channels: 1,
-      AudioQuality: "Low",
-      AudioEncoding: "aac",
-      AudioEncodingBitRate: 32000
+      AudioQuality: 'Low',
+      AudioEncoding: 'aac',
+      AudioEncodingBitRate: 32000,
     });
   }
 
   buttonTitle = () => {
-    return (this.state.isRecording) ? 'Stop Recording' : 'Start Recording'
+    return (this.state.isRecording) ? 'Stop Recording' : 'Start Recording';
   };
 
   _play = () => {
     this._stop();
-    var sound = new Sound(this.state.audioPath, '', (error) => {
+
+    const sound = new Sound(this.state.audioPath, '', (error) => {
       if (error) {
         Alert.alert(`failed to load the sound ${error}`);
       }
@@ -72,23 +80,23 @@ export default class AudioRecorder extends Component {
           Alert.alert('playback failed due to audio decoding errors');
         }
       });
-    }, 500)
+    }, 500);
   }
 
   _record = () => {
-    if(this.state.stoppedRecording){
+    if (this.state.stoppedRecording) {
       this.prepareRecordingPath(this.state.audioPath);
     }
 
     RNAudioRecorder.startRecording();
 
-    this.setState({isRecording: true});
+    this.setState({ isRecording: true });
   }
 
   _stop = () => {
     if (this.state.isRecording) {
       RNAudioRecorder.stopRecording();
-      this.setState({stoppedRecording: true, isRecording: false});
+      this.setState({ stoppedRecording: true, isRecording: false });
     }
   };
 
@@ -100,14 +108,12 @@ export default class AudioRecorder extends Component {
     }
   };
 
-  _renderPlayButton = () => {
-      return (
-        <Button
-          title='play'
-          onPress={this._play}
-        />
-      )
-  }
+  _renderPlayButton = () => (
+    <Button
+      title="play"
+      onPress={this._play}
+    />
+  )
 
   render() {
     return (
@@ -122,24 +128,5 @@ export default class AudioRecorder extends Component {
     );
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
-  },
-});
 
 AppRegistry.registerComponent('AudioRecorder', () => AudioRecorder);
