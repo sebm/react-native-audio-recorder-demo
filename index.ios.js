@@ -1,6 +1,6 @@
 import {AudioRecorder as RNAudioRecorder, AudioUtils as RNAudioUtils} from 'react-native-audio';
 
-const Sound = require('react-native-sound')
+import * as Sound from 'react-native-sound';
 
 import React, { Component } from 'react';
 import {
@@ -37,7 +37,7 @@ export default class AudioRecorder extends Component {
 
     RNAudioRecorder.onFinished = (data) => {
       this.setState({ finished: data.finished });
-      console.log(`Finished recording: ${data.finished}`);
+      Alert.alert(`Finished recording: ${data.finished}`)
     };
   }
 
@@ -60,17 +60,17 @@ export default class AudioRecorder extends Component {
     this._stop();
     var sound = new Sound(this.state.audioPath, '', (error) => {
       if (error) {
-        console.log('failed to load the sound', error);
+        Alert.alert(`failed to load the sound ${error}`);
       }
     });
 
     setTimeout(() => {
       sound.play((success) => {
         if (success) {
-            console.log('successfully finished playing');
-          } else {
-            console.log('playback failed due to audio decoding errors');
-          }
+          Alert.alert('successfully finished playing');
+        } else {
+          Alert.alert('playback failed due to audio decoding errors');
+        }
       });
     }, 500)
   }
