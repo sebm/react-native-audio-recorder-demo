@@ -23,6 +23,16 @@ const styles = StyleSheet.create({
 
 export default class AudioRecorder extends Component {
 
+  static prepareRecordingPath = (audioPath) => {
+    RNAudioRecorder.prepareRecordingAtPath(audioPath, {
+      SampleRate: 22050,
+      Channels: 1,
+      AudioQuality: 'Low',
+      AudioEncoding: 'aac',
+      AudioEncodingBitRate: 32000,
+    });
+  }
+
   constructor(props) {
     super(props);
     this.state = {
@@ -37,10 +47,10 @@ export default class AudioRecorder extends Component {
   }
 
   componentDidMount() {
-    this.prepareRecordingPath(this.state.audioPath);
+    AudioRecorder.prepareRecordingPath(this.state.audioPath);
 
     RNAudioRecorder.onProgress = (data) => {
-      this.setState({ currentTime: Math.floor(data.currentTime) });
+      this.setState({ currentTime: data.currentTime });
     };
 
     RNAudioRecorder.onFinished = (data) => {
@@ -49,18 +59,12 @@ export default class AudioRecorder extends Component {
     };
   }
 
-  prepareRecordingPath(audioPath) {
-    RNAudioRecorder.prepareRecordingAtPath(audioPath, {
-      SampleRate: 22050,
-      Channels: 1,
-      AudioQuality: 'Low',
-      AudioEncoding: 'aac',
-      AudioEncodingBitRate: 32000,
-    });
-  }
-
   buttonTitle = () => {
-    return (this.state.isRecording) ? 'Stop Recording' : 'Start Recording';
+    if (this.state.isRecording) {
+      return 'Stop Recording';
+    }
+
+    return 'Start Recording';
   };
 
   _play = () => {
@@ -85,7 +89,7 @@ export default class AudioRecorder extends Component {
 
   _record = () => {
     if (this.state.stoppedRecording) {
-      this.prepareRecordingPath(this.state.audioPath);
+      AudioRecorder.prepareRecordingPath(this.state.audioPath);
     }
 
     RNAudioRecorder.startRecording();
@@ -122,7 +126,7 @@ export default class AudioRecorder extends Component {
           onPress={this._onPressRecord}
           title={this.buttonTitle()}
         />
-        <Text>{this.state.currentTime}</Text>
+        <Text>{this.state.currentTime.toFixed(3)}</Text>
         {this._renderPlayButton()}
       </View>
     );
