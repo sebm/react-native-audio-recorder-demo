@@ -1,7 +1,5 @@
 import { AudioRecorder as RNAudioRecorder, AudioUtils as RNAudioUtils } from 'react-native-audio';
 
-import * as Sound from 'react-native-sound';
-
 import React, { Component } from 'react';
 import {
   Alert,
@@ -11,6 +9,8 @@ import {
   Text,
   View,
 } from 'react-native';
+
+const Sound = require('react-native-sound');
 
 const styles = StyleSheet.create({
   container: {
