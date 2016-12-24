@@ -1,5 +1,7 @@
 import {AudioRecorder as RNAudioRecorder, AudioUtils as RNAudioUtils} from 'react-native-audio';
 
+const Sound = require('react-native-sound')
+
 import React, { Component } from 'react';
 import {
   Alert,
@@ -20,14 +22,14 @@ export default class AudioRecorder extends Component {
       stoppedRecording: false,
       stoppedPlaying: false,
       playing: false,
-      finished: false
+      finished: false,
+      audioPath: RNAudioUtils.DocumentDirectoryPath + '/test.aac'
     }
   }
 
   componentDidMount() {
-    let audioPath = RNAudioUtils.DocumentDirectoryPath + '/test.aac';
 
-    this.prepareRecordingPath(audioPath);
+    this.prepareRecordingPath(this.state.audioPath);
 
     RNAudioRecorder.onProgress = (data) => {
       this.setState({ currentTime: Math.floor(data.currentTime) });
@@ -54,7 +56,26 @@ export default class AudioRecorder extends Component {
     return (this.state.isRecording) ? 'Stop Recording' : 'Start Recording'
   };
 
-  _record() {
+  _play = () => {
+    this._stop();
+    var sound = new Sound(this.state.audioPath, '', (error) => {
+      if (error) {
+        console.log('failed to load the sound', error);
+      }
+    });
+
+    setTimeout(() => {
+      sound.play((success) => {
+        if (success) {
+            console.log('successfully finished playing');
+          } else {
+            console.log('playback failed due to audio decoding errors');
+          }
+      });
+    }, 500)
+  }
+
+  _record = () => {
     if(this.state.stoppedRecording){
       this.prepareRecordingPath(this.state.audioPath);
     }
@@ -64,7 +85,7 @@ export default class AudioRecorder extends Component {
     this.setState({isRecording: true});
   }
 
-  _stop() {
+  _stop = () => {
     if (this.state.isRecording) {
       RNAudioRecorder.stopRecording();
       this.setState({stoppedRecording: true, isRecording: false});
@@ -80,7 +101,12 @@ export default class AudioRecorder extends Component {
   };
 
   _renderPlayButton = () => {
-
+      return (
+        <Button
+          title='play'
+          onPress={this._play}
+        />
+      )
   }
 
   render() {
@@ -90,6 +116,7 @@ export default class AudioRecorder extends Component {
           onPress={this._onPressRecord}
           title={this.buttonTitle()}
         />
+        <Text>{this.state.currentTime}</Text>
         {this._renderPlayButton()}
       </View>
     );
