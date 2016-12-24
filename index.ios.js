@@ -54,20 +54,43 @@ export default class AudioRecorder extends Component {
     return (this.state.isRecording) ? 'Stop Recording' : 'Start Recording'
   };
 
-  onPress = () => {
-    this.setState({
-      isRecording: !this.state.isRecording
-    });
+  _record() {
+    if(this.state.stoppedRecording){
+      this.prepareRecordingPath(this.state.audioPath);
+    }
+
+    RNAudioRecorder.startRecording();
+
+    this.setState({isRecording: true});
+  }
+
+  _stop() {
+    if (this.state.isRecording) {
+      RNAudioRecorder.stopRecording();
+      this.setState({stoppedRecording: true, isRecording: false});
+    }
+  }
+
+  _onPressRecord = () => {
+    if (!this.state.isRecording) {
+      this._record();
+    } else {
+      this._stop();
+    }
   };
 
-  render() {
+  _renderPlayButton = () => {
 
+  }
+
+  render() {
     return (
       <View style={styles.container}>
         <Button
-          onPress={this.onPress}
+          onPress={this._onPressRecord}
           title={this.buttonTitle()}
         />
+        {this._renderPlayButton()}
       </View>
     );
   }
